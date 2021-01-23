@@ -8,13 +8,11 @@ const AppRouter = () => (
   
   <BrowserRouter>
     <div className="main-container">
-      <Header />
-      <div className="main-content">
+      <Header />      
       <Switch>
-          <Route component={ProductForm} path="/" exact={true} />
-          <Route component={ProductsPage} path="/products" />
-      </Switch>
-      </div>      
+        <Route component={ProductForm} path="/" exact={true} />
+        <Route component={ProductsPage} path="/products" />
+      </Switch>           
     </div>
   </BrowserRouter>
 );

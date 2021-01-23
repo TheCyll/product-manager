@@ -11,6 +11,12 @@ $dark-bg-color: hsl(0, 0%, 10%);
 $text-color: hsl(0, 0%, 90%);
 $principal-color: hsl(145, 40%, 53%);
 $secondary-color: hsl(250, 90%, 70%);
+$error-message-text-color:  hsl(69, 100%, 60%);
+$error-message-bg-color:  hsl(0, 70%, 60%);
+$error-message-border-color:  hsl(0, 70%, 50%);
+$drop-area-bg-color: hsl(250, 90%, 85%);;
+$drop-area-text-color: hsl(0, 0%, 36%);
+$preview-border-color: hsl(180, 1%, 62%); 
 
 
 body {
@@ -40,30 +46,34 @@ body {
       color: $text-color;
       &:hover {
         color: $principal-color;
+        text-decoration: underline;
       }
     }
   }
 }
+
+.main-content {
+  display: flex;
+  flex-direction: row;
+}
+
 .product-form {
-  width: 50%;
+  width: 100%;
   padding: 50px;
-  margin: 0 30px;
+  // margin: 0 30px;
   display: flex;
   flex-direction: column; 
   font-size: 0.9rem;
-  color: $text-color;
+  color: $text-color;  
   
   input {
-    width: 300px;    
+    width: 80%;      
     border: none;
     padding: 5px;
     border-radius: 5px;
     border: solid 3px $secondary-color;
 
-    &:first-of-type {
-      width: 300px;
-    }    
-    &:last-of-type {
+    &[type=number]{
       width: 150px;
       -webkit-appearance: none;
       -moz-appearance: textfield;
@@ -71,12 +81,12 @@ body {
   }
   textarea {    
     width: 90%;
-    min-width: 300px;   
+    min-width: 300px;       
     min-height: 100px; 
+    max-height: 180px;
     resize: vertical; 
     padding: 5px;
-    border-radius: 5px;
-    border-radius: 5px;
+    border-radius: 5px;    
     border: solid 3px $secondary-color;
   }
   label {
@@ -126,5 +136,85 @@ body {
     font-weight: 600;
     color: $text-color;
     background-color: $principal-color;
+  }
+
+  .error-message {
+    background-color: $error-message-bg-color;
+    color: $error-message-text-color;    
+    border-radius: 5px;
+    margin-top: 5px;
+    padding: 5px;
+    width: max-content; 
+  }
+}
+
+@media (max-width: 420px){
+  .main-content {
+    flex-direction: column;
+    
+  }
+  // .product-form {
+  //   width: 100%;
+  //   color: red;
+  //   input {
+  //     width: 90%;
+  //   }
+  // }
+}
+
+.drop-zone-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;   
+  width: 100%;
+  padding: 50px;  
+  font-size: 1.2rem;  
+  text-align: center;
+  line-height: 2rem;
+
+  .drop-zone {
+    width: 100%;
+    height: 50%;
+    padding: 20px;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    background-color: $drop-area-bg-color;
+    color: $drop-area-text-color;
+    border-radius: 5px; 
+  }
+  
+  span {    
+    width: 100%;
+    height: 50%;
+    margin: 20px;  
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    background-color: transparent;
+    border-radius: 5px;    
+    border: solid 1px $preview-border-color;
+    padding: 10px;
+    color: $drop-area-text-color;
+    
+    .preview-area {
+      overflow: hidden;      
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center; 
+      
+      
+      img {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+        display: flex;
+      }
+    }
+
   }
 }
