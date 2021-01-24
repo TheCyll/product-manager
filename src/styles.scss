@@ -16,7 +16,11 @@ $error-message-bg-color:  hsl(0, 70%, 60%);
 $error-message-border-color:  hsl(0, 70%, 50%);
 $drop-area-bg-color: hsl(250, 90%, 85%);;
 $drop-area-text-color: hsl(0, 0%, 36%);
+$drop-area-border-color: hsl(290, 35%, 85%);
 $preview-border-color: hsl(180, 1%, 62%); 
+$edit-btn-color: hsl(303, 50%, 40%); 
+$edit-btn-border-color: hsl(303, 93%, 16%); 
+
 
 
 body {
@@ -109,8 +113,7 @@ body {
       height: 15px;
       margin: 1em auto;
       background-image: radial-gradient(circle at 0 0, transparent 0%, transparent 15px, $secondary-color 15px);
-
-      
+     
     }
     &::after {
       position: absolute;
@@ -137,7 +140,6 @@ body {
     color: $text-color;
     background-color: $principal-color;
   }
-
   .error-message {
     background-color: $error-message-bg-color;
     color: $error-message-text-color;    
@@ -147,6 +149,7 @@ body {
     width: max-content; 
   }
 }
+
 
 @media (max-width: 420px){
   .main-content {
@@ -180,11 +183,12 @@ body {
     margin: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center; 
     background-color: $drop-area-bg-color;
     color: $drop-area-text-color;
-    border-radius: 5px; 
+    border-radius: 5px;
+    border: 5px dashed #f3e6ef;
   }
   
   span {    
@@ -203,18 +207,58 @@ body {
     .preview-area {
       overflow: hidden;      
       width: 100%;
-      display: flex;
+      display: flex;            
       justify-content: center;
-      align-items: center; 
+      align-items: center;
+      flex-direction: column;
+      position: relative;
       
-      
-      img {
+      .button-positioner {
+        position: relative;
+        left: 0;
+        top: 0;
+        height: 0;
+
+        button {
+          position: absolute;
+          left: 94px;
+          top: -31px;   
+          height: 2rem;
+          width: 3.5rem;         
+          color: $text-color;
+          background-color: $edit-btn-color;
+          border: solid 3px $edit-btn-border-color;
+          border-top-left-radius: 20px;          
+          border-right: none;
+          border-bottom: none;
+          text-align: center;
+
+
+          &:hover {
+            cursor: pointer;
+            color: $principal-color;
+            text-decoration: underline;
+          }
+        }  
+      }
+
+      img {        
         width: 100%;
         max-width: 300px;
         height: auto;
-        display: flex;
+        display: flex; 
       }
     }
 
+  }
+
+  .error-message {
+    background-color: $error-message-bg-color;
+    color: $error-message-text-color;    
+    border-radius: 5px;   
+    padding: 5px;
+    font-size: 0.9rem;
+    max-height: 50px;
+    width: 100%; 
   }
 }
