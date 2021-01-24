@@ -1,9 +1,10 @@
 import React from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+// import ImageUploader from './ImageUploader';
 
 
-const FormInputs = () => {
+const FormInputs = ({onHandleSubmit}) => { 
   return (
     <Formik 
       initialValues={{
@@ -29,11 +30,10 @@ const FormInputs = () => {
           .required('Required field, should be a number')
         //TODO agregate automatic date for created and for last edited
       })}
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          setSubmitting(false);
-        }, 400);
+      onSubmit={(values, { setSubmitting }) => {        
+        
+        onHandleSubmit(values);        
+        setSubmitting(false);
 
         // TODO send the data (and the edited image 'file') to the server
       }} 
@@ -59,8 +59,8 @@ const FormInputs = () => {
         <ErrorMessage component="span" className="error-message" name="price" />
         <label htmlFor="stock">Stock</label>
         <Field name="stock" type="number" />
-        <ErrorMessage component="span" className="error-message" name="stock" />
-        <button type="submit">Submit</button>
+        <ErrorMessage component="span" className="error-message" name="stock" />        
+        <button type="submit">Submit</button>                
       </Form>
     </Formik>
   )

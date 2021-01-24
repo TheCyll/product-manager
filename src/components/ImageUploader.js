@@ -1,15 +1,22 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import FilerobotImageEditor from 'filerobot-image-editor';
 
-const ImageUploader = () => {
+const ImageUploader = ({onSetImage}) => {
   
   const [show, toggle] = useState(false);
-  const [file, setFile] = useState([]);
+  // const [file, setFile] = useState([]);
   const [fileName, setFileName] = useState('');
   const [imageError, setImageError] = useState('');
   const [previewSrc, setPreviewSrc] = useState('');  
   const dropRef = useRef(); 
+
+  useEffect(() => {
+    // console.log(previewSrc);
+    /* on change, 'preview' contains the current edited file. 
+      We have to send it to the HOC to submit */
+    onSetImage(previewSrc);
+  }, [previewSrc])
 
   const editorConfig = {
     tools: ['adjust', 'effects', 'filters', 'rotate', 'crop', 'resize'],
@@ -26,24 +33,25 @@ const ImageUploader = () => {
 
   const onBeforeEditor = ({ canvas }) => {
     const editedImageData = canvas.toDataURL();
-    setFile(editedImageData);
-    setPreviewSrc(editedImageData);    
-    
+    // setFile(editedImageData);
+    setPreviewSrc(editedImageData); 
+        
     return false;
   }  
   
   const onDropAccepted = (acceptedFiles) => {    
     // onDrop always returns an array 
-    const [uploadedFile] = acceptedFiles;
+    const [uploadedFile] = acceptedFiles;    
 
     setFileName(uploadedFile.name);
 
     const fileReader = new FileReader();
     fileReader.readAsDataURL(uploadedFile);
-    fileReader.onload = () => {           
-      setPreviewSrc(fileReader.result);
+    
+    fileReader.onload = () => { 
+      setPreviewSrc(fileReader.result);       
     };
-
+    
     setImageError('');
     dropRef.current.style.border = '5px dashed #f3e6ef';
   }
@@ -104,7 +112,10 @@ const ImageUploader = () => {
         </span>
       ) : (
         <span className="preview-message">
-          <p>Image preview will be shown here after selection</p>
+          <p>
+            Image preview will be shown here after selection.  
+            <strong> If no image is loaded a default would be in place.</strong>
+          </p>
         </span>
       )} 
     </div>

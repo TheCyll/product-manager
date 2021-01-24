@@ -20,6 +20,7 @@ $drop-area-border-color: hsl(290, 35%, 85%);
 $preview-border-color: hsl(180, 1%, 62%); 
 $edit-btn-color: hsl(303, 50%, 40%); 
 $edit-btn-border-color: hsl(303, 93%, 16%); 
+$warning-text-color: hsl(69, 40%, 40%);
 
 
 
@@ -139,6 +140,11 @@ body {
     font-weight: 600;
     color: $text-color;
     background-color: $principal-color;
+    transition: all 0.2s;
+
+    &:hover {
+      transform: scale(1.07);
+    }
   }
   .error-message {
     background-color: $error-message-bg-color;
@@ -150,19 +156,23 @@ body {
   }
 }
 
-
-@media (max-width: 420px){
+@media (max-width: 860px){
   .main-content {
-    flex-direction: column;
+    flex-direction: column; 
+
+    .product-form {
+      padding-bottom: 20px;
+    }    
     
-  }
-  // .product-form {
-  //   width: 100%;
-  //   color: red;
-  //   input {
-  //     width: 90%;
-  //   }
-  // }
+    .drop-zone-container {
+      padding-top: 0;
+
+      .drop-zone {
+        min-height: 300px;
+        
+      }      
+    }
+  }  
 }
 
 .drop-zone-container {
@@ -204,6 +214,10 @@ body {
     padding: 10px;
     color: $drop-area-text-color;
     
+    strong {
+      color: $warning-text-color;
+    }   
+    
     .preview-area {
       overflow: hidden;      
       width: 100%;
@@ -211,7 +225,7 @@ body {
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      position: relative;
+      position: relative;      
       
       .button-positioner {
         position: relative;
@@ -221,23 +235,24 @@ body {
 
         button {
           position: absolute;
-          left: 94px;
-          top: -31px;   
-          height: 2rem;
-          width: 3.5rem;         
-          color: $text-color;
-          background-color: $edit-btn-color;
+          left: 78px;
+          top: -43px;
+          height: 2.7rem;
+          width: 4.5rem; 
+          font-size: 1rem;       
+          color: $edit-btn-border-color;
+          background-color: $drop-area-bg-color;
           border: solid 3px $edit-btn-border-color;
           border-top-left-radius: 20px;          
           border-right: none;
           border-bottom: none;
-          text-align: center;
-
+          text-align: center; 
 
           &:hover {
             cursor: pointer;
             color: $principal-color;
             text-decoration: underline;
+            
           }
         }  
       }
@@ -245,11 +260,10 @@ body {
       img {        
         width: 100%;
         max-width: 300px;
-        height: auto;
-        display: flex; 
+        height: auto;        
+        display: flex;
       }
     }
-
   }
 
   .error-message {
