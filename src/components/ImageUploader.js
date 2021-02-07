@@ -11,10 +11,10 @@ const ImageUploader = ({onSetImage}) => {
   const [previewSrc, setPreviewSrc] = useState('');  
   const dropRef = useRef(); 
 
-  useEffect(() => {
-    // console.log(previewSrc);
+  useEffect(() => {    
     /* on change, 'preview' contains the current edited file. 
       We have to send it to the HOC to submit */
+    
     onSetImage(previewSrc);
   }, [previewSrc])
 
@@ -32,6 +32,7 @@ const ImageUploader = ({onSetImage}) => {
   }
 
   const onBeforeEditor = ({ canvas }) => {
+    
     const editedImageData = canvas.toDataURL();
     // setFile(editedImageData);
     setPreviewSrc(editedImageData); 
@@ -41,15 +42,20 @@ const ImageUploader = ({onSetImage}) => {
   
   const onDropAccepted = (acceptedFiles) => {    
     // onDrop always returns an array 
-    const [uploadedFile] = acceptedFiles;    
+    // take the first element 
+    const [uploadedFile] = acceptedFiles; 
+    
+    console.log(uploadedFile);
 
-    setFileName(uploadedFile.name);
+    setFileName(uploadedFile.name); 
 
     const fileReader = new FileReader();
-    fileReader.readAsDataURL(uploadedFile);
+    // base64 string 
+    fileReader.readAsDataURL(uploadedFile); 
     
     fileReader.onload = () => { 
-      setPreviewSrc(fileReader.result);       
+      // convert then save 
+      setPreviewSrc(fileReader.result);     
     };
     
     setImageError('');
@@ -123,4 +129,3 @@ const ImageUploader = ({onSetImage}) => {
 }
 
 export default ImageUploader;
-

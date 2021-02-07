@@ -16,7 +16,7 @@ const FormInputs = ({onHandleSubmit}) => {
         price: '',
         stock: ''
       }}
-      validationSchema={Yup.object({
+      validationSchema={ Yup.object({
         name: Yup.string().max(50, 'Must be 50 characters or less').required('Required'),
         description: Yup.string().max(300, 'Must be 300 characters or less').required('Required'),
         characteristics: Yup.string().max(300, 'Must be 300 characters or less').required('Required'),
@@ -27,15 +27,12 @@ const FormInputs = ({onHandleSubmit}) => {
           .required('Required field, should be a number'),
         stock: Yup.number().integer('The stock should be an integer')
           .min(0, 'The price should be a non-negative number')
-          .required('Required field, should be a number')
-        //TODO agregate automatic date for created and for last edited
+          .required('Required field, should be a number')        
       })}
-      onSubmit={(values, { setSubmitting }) => {        
-        
+      onSubmit={(values, { setSubmitting }) => {       
+        // pass the form data to ProductForm component        
         onHandleSubmit(values);        
-        setSubmitting(false);
-
-        // TODO send the data (and the edited image 'file') to the server
+        setSubmitting(false);        
       }} 
     >
       <Form className="product-form" noValidate>      
