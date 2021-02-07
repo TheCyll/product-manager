@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
+const path = require('path');
 const { Product, validateProduct } = require('../models/product');
 
 const upload = multer({
@@ -30,6 +31,7 @@ const upload = multer({
 
 router.post('/create', upload.single('image'), async (req, res) => {
 
+  console.log(req.body);
   console.log(req.file)
 
 });

@@ -4,19 +4,11 @@ import FilerobotImageEditor from 'filerobot-image-editor';
 
 const ImageUploader = ({onSetImage}) => {
   
-  const [show, toggle] = useState(false);
-  // const [file, setFile] = useState([]);
-  const [fileName, setFileName] = useState('');
+  const [show, toggle] = useState(false);  
+  const [fileData, setFileData] = useState({});
   const [imageError, setImageError] = useState('');
   const [previewSrc, setPreviewSrc] = useState('');  
   const dropRef = useRef(); 
-
-  useEffect(() => {    
-    /* on change, 'preview' contains the current edited file. 
-      We have to send it to the HOC to submit */
-    
-    onSetImage(previewSrc);
-  }, [previewSrc])
 
   const editorConfig = {
     tools: ['adjust', 'effects', 'filters', 'rotate', 'crop', 'resize'],
@@ -26,6 +18,13 @@ const ImageUploader = ({onSetImage}) => {
       }
     }
   }
+  
+  useEffect(() => {    
+    /* on change, 'preview' contains the current edited file. 
+      We have to send it to the HOC to submit */    
+    onSetImage(previewSrc, fileData);
+  }, [previewSrc, fileData])
+
 
   const onCloseEditor = () => {
     toggle(false);
@@ -34,7 +33,6 @@ const ImageUploader = ({onSetImage}) => {
   const onBeforeEditor = ({ canvas }) => {
     
     const editedImageData = canvas.toDataURL();
-    // setFile(editedImageData);
     setPreviewSrc(editedImageData); 
         
     return false;
@@ -43,11 +41,16 @@ const ImageUploader = ({onSetImage}) => {
   const onDropAccepted = (acceptedFiles) => {    
     // onDrop always returns an array 
     // take the first element 
-    const [uploadedFile] = acceptedFiles; 
-    
-    console.log(uploadedFile);
+    const [ uploadedFile ] = acceptedFiles;
 
-    setFileName(uploadedFile.name); 
+    const {name, size, type, lastModified} = uploadedFile;
+    
+    setFileData({
+      name,
+      size,
+      type,
+      lastModified
+    }); 
 
     const fileReader = new FileReader();
     // base64 string 
@@ -89,9 +92,9 @@ const ImageUploader = ({onSetImage}) => {
           <div {...getRootProps({ className: 'drop-zone' })} ref={dropRef} >
             <input {...getInputProps()} />
             <p>Drag and drop a image OR click here to select a image</p>
-            {fileName && (
+            {fileData && (
               <div>
-                <strong>Selected file:</strong> {fileName}
+                <strong>Selected file:</strong> {fileData.name}
               </div>
             )}
           </div>
