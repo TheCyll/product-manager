@@ -18,13 +18,14 @@ const ImageUploader = ({onSetImage}) => {
       }
     }
   }
-  
-  useEffect(() => {    
-    /* on change, 'preview' contains the current edited file. 
-      We have to send it to the HOC to submit */    
-    onSetImage(previewSrc, fileData);
-  }, [previewSrc, fileData])
 
+  useEffect(() => {
+    
+    if(previewSrc.length > 0 && Object.keys(fileData).length > 0) {
+      onSetImage(previewSrc, fileData);
+    }
+    
+  }, [previewSrc, fileData]);
 
   const onCloseEditor = () => {
     toggle(false);
@@ -33,7 +34,7 @@ const ImageUploader = ({onSetImage}) => {
   const onBeforeEditor = ({ canvas }) => {
     
     const editedImageData = canvas.toDataURL();
-    setPreviewSrc(editedImageData); 
+    setPreviewSrc(editedImageData);   
         
     return false;
   }  
@@ -56,9 +57,9 @@ const ImageUploader = ({onSetImage}) => {
     // base64 string 
     fileReader.readAsDataURL(uploadedFile); 
     
-    fileReader.onload = () => { 
-      // convert then save 
-      setPreviewSrc(fileReader.result);     
+    fileReader.onload = (e) => { 
+      // convert then save      
+      setPreviewSrc(fileReader.result);
     };
     
     setImageError('');

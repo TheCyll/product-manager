@@ -7,20 +7,14 @@ import axios from 'axios';
 import { dataURItoBlob } from '../utils/helpers';
 
 const ProductForm = () => {
-
-  const [formValues, setFormValues] = useState('');
-  const [imageURI, setImageURI] = useState(''); 
-  const [imageData, setImageData] = useState({});
+  
   const [image, setImage] = useState({});
-  const [submitError, setSubmitError] = useState('');
-  console.log(image);
+  const [submitError, setSubmitError] = useState('');   
 
-  const setImageFile = (editedImage, imageData ) => {   
-    setImageURI(editedImage);
-    setImageData(imageData);
-     
-    if (editedImage.length > 0 && Object.keys(imageData).length > 0) {
-      const imageBlob = dataURItoBlob(editedImage);
+  const setImageFile = (editedImageSrc, imageData ) => {   
+    
+    if (editedImageSrc.length > 0 && Object.keys(imageData).length > 0) {
+      const imageBlob = dataURItoBlob(editedImageSrc);
       const imageFile = new File([imageBlob], imageData.name, {        
         lastModified: imageData.lastModified,
         type: imageData.type
@@ -31,25 +25,26 @@ const ProductForm = () => {
 
   const handleSubmit = async (acceptedFormValues) => { 
     try {
-
-      setFormValues(acceptedFormValues); 
+      
       const formData = new FormData();
 
-      for (const property in formValues) {
-        formData.append(`${property}`, formValues[property]);
+      for (const property in acceptedFormValues) {
+        formData.append(`${property}`, acceptedFormValues[property]);
       }   
 
-      if(image) {
+      if(image instanceof File) {
         formData.append('image', image);
-      }
+      }      
       
-      await axios.post(`${API_URL}/product/create`, formData, {
+      setSubmitError('');
+
+      let response = await axios.post(`${API_URL}/product/create`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
 
-      setSubmitError('');
+      console.log(response.data);
 
     } catch (error) {
       console.log(error);

@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
-const path = require('path');
+// const path = require('path');
 const { Product, validateProduct } = require('../models/product');
 
 const upload = multer({
@@ -30,10 +30,41 @@ const upload = multer({
 });
 
 router.post('/create', upload.single('image'), async (req, res) => {
+  try {
+    const productValues = req.body;
+  
+    const product = new Product({
+      ...productValues,
+      image_path: '',
+      image_mimetype: ''  
+    });
+  
+    if( req.file ) {    
+      const { path, mimetype } = req.file;
+  
+      product.image_path = path;
+      product.image_mimetype = mimetype; 
+    }
 
-  console.log(req.body);
-  console.log(req.file)
+    const dbProduct = await product.save();    
 
+    res.status(200).json({
+      ok: true,
+      data: dbProduct
+    });
+    
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      err: {
+        message: "Error while uploading the product"
+      }
+    });
+  } 
+}, (error, req, res, next) => {
+  if (error) {
+    res.status(500).send(error.message);
+  }
 });
 
 module.exports = router;

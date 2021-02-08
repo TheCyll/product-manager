@@ -37,6 +37,14 @@ const productSchema = new Schema({
     type: Number,
     min: [0, 'The stock can\'t be a negative number'],
     required: [true, 'The description is required']    
+  },
+  image_path: {
+    type: String,
+    required: true
+  },
+  image_mimetype: {
+    type: String,
+    required: true
   }
 }, 
 { 
@@ -59,7 +67,9 @@ function validateProduct(product) {
       .required(),
     stock: Joi.number()      
       .min(0)      
-      .required()
+      .required(),
+    image_path: Joi.string().required(),
+    image_mimetype: Joi.string().required()
   });
 
   return schema.validate(product);
