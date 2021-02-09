@@ -1,6 +1,7 @@
 const express = require('express');
-const multer = require('multer');
 const router = express.Router();
+const multer = require('multer');
+const fs = require('fs');
 // const path = require('path');
 const { Product, validateProduct } = require('../models/product');
 
@@ -66,5 +67,103 @@ router.post('/create', upload.single('image'), async (req, res) => {
     res.status(500).send(error.message);
   }
 });
+
+router.get('/getProducts', async(req, res) => {
+  try {
+    const queryResponse = await Produc.find({}).exec();
+
+    res.status(200).json({
+      ok: true,
+      data: queryResponse
+    })
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      err: error.message
+    })
+  }
+});
+
+router.get('/getProduct/:id', async(req, res) => {
+  try {
+    const { id } = req.params;
+    const queryResponse = await Product.findById(id).exec();
+
+    if( !queryResponse ) {
+      res.status(400).json({
+        ok: false,
+        err: "Bad request, provide a valid id"
+      })
+    } else {
+      res.status(200).json({
+        ok: true,
+        data: queryResponse
+      })
+    }
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      err: error.message
+    })
+  }
+});
+
+router.put('/update/:id', upload.single('image'), async(req, res) => {
+  try {
+    const { id } = req.params;
+    const newProduct = req.body;
+    const queryResponse = await Product.findByIdAndUpdate(id, newProduct, { new: true, runValidators: true } ).exec();
+
+    if ( !queryResponse ) {
+      res.status(400).json({
+        ok: false,
+        err: "The product does not exist, provide a valid id"
+      });
+    } else {
+      res.status(200).json({
+        ok:true,
+        data: queryResponse
+      })
+    }
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      err: error.message
+    })
+  }
+});
+
+router.delete('/delete/:id', async(req, res) => {
+  try {
+    const { id } = req.params;
+    const queryResponse = await Product.findByIdAndDelete(id).exec();
+
+    if ( !queryResponse ) {
+      res.status(400).json({
+        ok: false,
+        err: "The document does not exist, provide a valid id"
+      });
+    } else {
+
+      const path = queryResponse.image_path;
+      
+      fs.unlink(path, (err) => {
+        if (err) throw err;
+        console.log('The image has been deleted');
+      });
+
+      res.status(200).json({
+        ok: true,
+        data: queryResponse
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      err: error.message
+    })
+  }
+});
+
 
 module.exports = router;
