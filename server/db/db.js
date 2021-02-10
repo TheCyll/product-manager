@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-import { MONGO_URI } from '../config/secrets';
+require('../config/config');
 
-mongoose.connect( MONGO_URI, {
+mongoose.connect( process.env.URLDB, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
