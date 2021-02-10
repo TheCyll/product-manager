@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-require('../config/config');
+import { MONGO_URI } from '../config/secrets';
 
 mongoose.connect( MONGO_URI, {
   useNewUrlParser: true,
