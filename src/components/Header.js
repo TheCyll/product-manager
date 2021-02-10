@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 const Header = () => {
   return (
     <header className="products-header">
-      <h1>Image manager</h1>
+      <h1>Product manager</h1>
       <nav>
         <NavLink activeClassName="active" to="/" exact={true}>
           Create product
