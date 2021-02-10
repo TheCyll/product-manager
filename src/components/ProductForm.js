@@ -38,7 +38,7 @@ const ProductForm = () => {
       
       setSubmitError('');
 
-      let response = await axios.post(`${API_URL}/products/create`, formData, {
+      let response = await axios.post(`${API_URL}/product/create`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

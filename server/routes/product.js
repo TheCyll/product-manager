@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const fs = require('fs');
-// const path = require('path');
+// const pathSys = require('path');
 const { Product, validateProduct } = require('../models/product');
 
 const upload = multer({
@@ -32,45 +32,56 @@ const upload = multer({
 
 router.post('/create', upload.single('image'), async (req, res) => {
   try {
-    const productValues = req.body;
-  
-    const product = new Product({
+    const productValues = req.body;    
+
+    let product = {
       ...productValues,
       image_path: '',
       image_mimetype: ''  
-    });
+    };    
   
     if( req.file ) {    
       const { path, mimetype } = req.file;
   
       product.image_path = path;
       product.image_mimetype = mimetype; 
+    } else {     
+      const path = 'images\\resources\\no_image_default.png';
+      const mimetype = 'image/png';
+
+      product.image_path = path;
+      product.image_mimetype = mimetype; 
     }
 
-    const dbProduct = await product.save();    
+    // verify new product
+    const { error } = validateProduct(product);
+    if ( error ) {
+      return res.status(400).json({
+        ok: false,
+        err: error.details[0].message
+      })
+    }
+
+    product = new Product( product );
+
+    const queryResponse = await product.save(); 
 
     res.status(200).json({
       ok: true,
-      data: dbProduct
+      data: queryResponse
     });
     
-  } catch (error) {
+  } catch (error) {    
     res.status(400).json({
       ok: false,
-      err: {
-        message: "Error while uploading the product"
-      }
+      err: error.message      
     });
   } 
-}, (error, req, res, next) => {
-  if (error) {
-    res.status(500).send(error.message);
-  }
 });
 
 router.get('/getProducts', async(req, res) => {
   try {
-    const queryResponse = await Produc.find({}).exec();
+    const queryResponse = await Product.find({}).exec();
 
     res.status(200).json({
       ok: true,
@@ -111,10 +122,52 @@ router.get('/getProduct/:id', async(req, res) => {
 router.put('/update/:id', upload.single('image'), async(req, res) => {
   try {
     const { id } = req.params;
-    const newProduct = req.body;
-    const queryResponse = await Product.findByIdAndUpdate(id, newProduct, { new: true, runValidators: true } ).exec();
+    const newProductValues = req.body;
 
-    if ( !queryResponse ) {
+    // structure of a new product
+    const newProduct = {
+      ...newProductValues,
+      image_path: '',
+      image_mimetype: '' 
+    }
+
+    // set new image
+    if( req.file ) {
+      const { path, mimetype } = req.file;
+  
+      newProduct.image_path = path;
+      newProduct.image_mimetype = mimetype; 
+    } else {
+      const path = 'images\\resources\\no_image_default.png';
+      const mimetype = 'image/png';
+
+      newProduct.image_path = path;
+      newProduct.image_mimetype = mimetype; 
+    } 
+
+    // verify new product
+    const { error } = validateProduct(newProduct);
+    if ( error ) {
+      return res.status(400).json({
+        ok: false,
+        err: error.details[0].message
+      })
+    }
+
+    // delete old image
+    const queryResponseBefore = await Product.findById(id).exec();
+    const path = queryResponseBefore.image_path;
+      if ( path ) {
+        fs.unlink(path, (err) => {
+          if (err) throw err;
+          console.log('The image has been deleted');
+        });
+      }
+    
+    // update document
+    const queryResponse = await Product.findByIdAndUpdate(id, newProduct, { new: true, runValidators: true } ).exec();
+    
+    if ( !queryResponseBefore || !queryResponse ) {
       res.status(400).json({
         ok: false,
         err: "The product does not exist, provide a valid id"
@@ -146,11 +199,13 @@ router.delete('/delete/:id', async(req, res) => {
     } else {
 
       const path = queryResponse.image_path;
-      
-      fs.unlink(path, (err) => {
-        if (err) throw err;
-        console.log('The image has been deleted');
-      });
+
+      if ( path && path !== 'images\\resources\\no_image_default.png') {
+        fs.unlink(path, (err) => {
+          if (err) throw err;
+          console.log('The image has been deleted');
+        });
+      }
 
       res.status(200).json({
         ok: true,
@@ -164,6 +219,5 @@ router.delete('/delete/:id', async(req, res) => {
     })
   }
 });
-
 
 module.exports = router;
