@@ -29,5 +29,5 @@ Not yet but soon:
 
 ## IMPORTANT NOTE
 
-For security reasons, and because the app it's not in production yet, I have removed mi MONGO_URI from the database configuration.
-If you want to save files to check out the functionality in a development environment you have to pass a MONGO_URI yourself in the **config/config.js** as an export from a custom **secrets.js** file.
+For security reasons, and because the app it's not in production yet, I have removed my MONGO_URI from the database configuration.
+If you want to save files to check out the functionality in a development environment you have to pass a MONGO_URI yourself in the ```config/config.js``` as an export from a custom ```secrets.js``` file.
